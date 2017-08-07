@@ -34,14 +34,12 @@ public class UrlParser {
      * 得到路径中某一项'/'之后到后一个'/'之前的值
      */
     public String getAfter(String path) {
-        if (mArr != null && mArr.length > 0) {
-
+        if (!isEmpty(mArr)) {
             for (int i = 0; i < mArr.length; i++) {
                 if (mArr[i].equals(path) && i < mArr.length - 1) {
                     return mArr[i + 1];
                 }
             }
-
         }
         return null;
     }
@@ -60,15 +58,15 @@ public class UrlParser {
         HashMap<String, String> map = null;
         if (mURL != null) {
             String query = mURL.getQuery();
-            if (query != null) {
+            if (!isEmpty(query)) {
                 map = new HashMap<>();
                 if (query.contains("&")) {
                     String[] params = query.split("&");
-                    for (String k_v : params) {
-                        parseIntoMadp(k_v, map);
+                    for (String param : params) {
+                        parseIntoMap(param, map);
                     }
                 } else {
-                    parseIntoMadp(query, map);
+                    parseIntoMap(query, map);
                 }
             }
 
@@ -95,13 +93,21 @@ public class UrlParser {
     }
 
     //type=3这种字符串,以"="切割后key,value分别放进数组
-    private void parseIntoMadp(String param, HashMap<String, String> map) {
+    private void parseIntoMap(String param, HashMap<String, String> map) {
         String[] kv = param.split("=");
         if (kv.length > 1) {
             map.put(kv[0], kv[1]);
         } else {
             map.put(kv[0], "");
         }
+    }
+
+    private static boolean isEmpty(String string) {
+        return string == null || string.trim().equals("");
+    }
+
+    private static <T> boolean isEmpty(T[] arr) {
+        return arr == null || arr.length == 0;
     }
 
     public static void main(String[] args) {
